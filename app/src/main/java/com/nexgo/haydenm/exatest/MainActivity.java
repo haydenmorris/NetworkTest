@@ -1,6 +1,9 @@
 package com.nexgo.haydenm.exatest;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -32,20 +35,58 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                System.out.println("Connected to some network: " + isNetworkOnline());
+                if (!isNetworkOnline())
+                {
+                    System.out.println("Not connected to ANY network. No reason to proceed.");
 
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    System.out.println("NO --> Clicked CANCEL / NO GEN AGAIN");
+                                }
+                            })
+                            .setTitle("No Networks Connected")
+                            .setMessage("Warning! \n\nNo connected networks were detected. \n" +
+                                    "\nAll the remaining tests will fail, proceed anyways?")
+                            .show();
+                }
 
             }
         });
     }
 
-    public void executeNetworkTests()
+    /**
+     *
+     * @param test_name
+     *          NetworkConnected --> Returns whether there is any connection to WIFI AP or GSM Tower.
+     *          DNSResolution    --> Returns whether a DNS Resolution test is able to complete.
+     *          PingTest         --> Returns whether a Pingtest is able to complete.
+     * @return whether or not the requested test passed / failed. Returns boolean denoted as much.
+     */
+    public boolean executeNetworkTests(String test_name)
     {
-
-
-
+        switch (test_name)
+        {
+            case "NetworkConnected":
+                return isNetworkOnline();
+            case "DNSResolution":
+                return isDNSResolutionWorking();
+            case "PingTest":
+                return isPingSuccessful("8.8.8.8", 3);
+            default:
+                    return false;
+        }
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Checks if ANY network is connected (WIFI or CELLULAR) - but only denotes a connection, and
      * doesn't guarentee there is a connection to the public internet.
@@ -78,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDNSResolutionWorking()
     {
         try {
-            InetAddress address = InetAddress.getByName("www.example.com");
+            InetAddress address = InetAddress.getByName("www.google.com");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -132,5 +173,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return process.exitValue() == 0;
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
