@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.LinkProperties;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////[  START NETWORK TESTS FUNCTIONS  ]//////////////////////////////////////////////////
     /**
      * Checks if ANY network is connected (WIFI or CELLULAR) - but only denotes a connection, and
      * doesn't guarentee there is a connection to the public internet.
@@ -265,8 +267,9 @@ public class MainActivity extends AppCompatActivity {
         }
         return statusCode;
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////[  END NETWORK TESTS FUNCTIONS  ]////////////////////////////////////////////////////////
 
+    /////////////////////////////////[  START ASYNC CLASSES  ]//////////////////////////////////////////////////
     private class DNSTestAsyncCaller extends AsyncTask<Void, Void, Void>
     {
         ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
@@ -407,5 +410,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    /////////////////////////////////[  END NETWORK TESTS FUNCTIONS  ]//////////////////////////////////////////////////
+
+    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
 }
